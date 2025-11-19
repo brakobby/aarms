@@ -1,0 +1,58 @@
+<!-- ==========================================
+     STUDENT DETAIL TEMPLATE
+     school/templates/school/student_detail.html
+     ========================================== -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>{{ student.get_full_name }}</h2>
+        <a href="{% url 'school:student_edit' student.pk %}" class="btn btn-primary">Edit</a>
+    </div>
+    <div class="card-body">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <div>
+                <h3>Personal Information</h3>
+                <p><strong>Admission #:</strong> {{ student.admission_number }}</p>
+                <p><strong>Gender:</strong> {{ student.get_gender_display }}</p>
+                <p><strong>Date of Birth:</strong> {{ student.date_of_birth }}</p>
+                <p><strong>Age:</strong> {{ student.age }} years</p>
+                <p><strong>Class:</strong> {{ student.current_class.name }}</p>
+            </div>
+            <div>
+                <h3>Guardian Information</h3>
+                <p><strong>Name:</strong> {{ student.guardian_name }}</p>
+                <p><strong>Phone:</strong> {{ student.guardian_phone }}</p>
+                <p><strong>Email:</strong> {{ student.guardian_email }}</p>
+                <p><strong>Address:</strong> {{ student.guardian_address }}</p>
+            </div>
+        </div>
+        
+        <h3 style="margin-top: 2rem;">Recent Results</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Quarter</th>
+                    <th>Course</th>
+                    <th>Score</th>
+                    <th>Grade</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in results %}
+                <tr>
+                    <td>{{ result.quarter.get_name_display }}</td>
+                    <td>{{ result.course.name }}</td>
+                    <td>{{ result.score }}</td>
+                    <td><strong>{{ result.get_grade }}</strong></td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4">No results yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

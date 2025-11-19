@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard - AARMS{% endblock %}
+
+{% block extra_css %}
+<style>
+    .stat-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.8rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+    .stat-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+    .stat-icon {
+        width: 70px; height: 70px; border-radius: 15px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 2rem; color: white;
+    }
+    .quick-actions .col {
+        margin-bottom: 1rem;
+    }
+    .action-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        transition: all 0.3s;
+        height: 100%;
+    }
+    .action-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+    .action-card i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: #5d5fef;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+    <h1 class="h3 mb-4 text-primary fw-bold">
+        Welcome back, {{ user.get_full_name }}!
+    </h1>
+
+    <!-- Stats Grid -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="stat-card d-flex align-items-center">
+                <div class="stat-icon me-4" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+                <div>
+                    <h4 class="mb-0 fw-bold">{{ total_students|default:"0" }}</h4>
+                    <small class="text-muted">Total Students</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card d-flex align-items-center">
+                <div class="stat-icon me-4" style="background: linear-gradient(135deg, #f093fb, #f5576c);">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                </div>
+                <div>
+                    <h4 class="mb-0 fw-bold">{{ total_teachers|default:"0" }}</h4>
+                    <small class="text-muted">Teachers</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card d-flex align-items-center">
+                <div class="stat-icon me-4" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">
+                    <i class="fas fa-chalkboard"></i>
+                </div>
+                <div>
+                    <h4 class="mb-0 fw-bold">{{ total_classes|default:"0" }}</h4>
+                    <small class="text-muted">Classes</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card d-flex align-items-center">
+                <div class="stat-icon me-4" style="background: linear-gradient(135deg, #43e97b, #38f9d7);">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div>
+                    <h4 class="mb-0 fw-bold text-warning">{{ pending_results|default:"0" }}</h4>
+                    <small class="text-muted">Pending Approvals</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <h2 class="h4 mb-3 text-dark fw-bold">Quick Actions</h2>
+    <div class="row quick-actions g-4">
+        <div class="col-md-4 col-lg-3">
+            <a href="{% url 'school:student_create' %}" class="text-decoration-none">
+                <div class="action-card">
+                    <i class="fas fa-user-plus"></i>
+                    <h5 class="mb-0">Add Student</h5>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4 col-lg-3">
+            <a href="{% url 'school:class_create' %}" class="text-decoration-none">
+                <div class="action-card">
+                    <i class="fas fa-plus-circle"></i>
+                    <h5 class="mb-0">Create Class</h5>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4 col-lg-3">
+            <a href="{% url 'school:course_create' %}" class="text-decoration-none">
+                <div class="action-card">
+                    <i class="fas fa-book-medical"></i>
+                    <h5 class="mb-0">Add Course</h5>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4 col-lg-3">
+            <a href="{% url 'school:approval_list' %}" class="text-decoration-none">
+                <div class="action-card">
+                    <i class="fas fa-check-double text-success"></i>
+                    <h5 class="mb-0">Approve Results</h5>
+                    {% if pending_results > 0 %}
+                    <span class="badge bg-danger position-absolute top-0 end-0 mt-2 me-2">{{ pending_results }}</span>
+                    {% endif %}
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="mt-5 text-center text-muted">
+        <p><strong>AARMS</strong> — Making school management simple and powerful</p>
+    </div>
+</div>
+{% endblock %}

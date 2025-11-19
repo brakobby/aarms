@@ -1,0 +1,82 @@
+<!-- ==========================================
+     APPROVAL LIST TEMPLATE
+     school/templates/school/approval_list.html
+     ========================================== -->
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Pending Result Approval - AARMS{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary fw-bold">
+            <i class="fas fa-clipboard-check me-2"></i> Results Pending Approval
+        </h2>
+        <a href="{% url 'school:dashboard' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            {% if pending_results %}
+            <div class="table-responsive">
+                <table class="table table-hover mb-0 align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Student</th>
+                            <th>Class</th>
+                            <th>Course</th>
+                            <th>Quarter</th>
+                            <th>Score</th>
+                            <th>Grade</th>
+                            <th>Teacher</th>
+                            <th>Submitted</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for result in pending_results %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td><strong>{{ result.student.get_full_name }}</strong></td>
+                            <td>{{ result.student.current_class.name }}</td>
+                            <td>{{ result.course.name }} <small class="text-muted">({{ result.course.code }})</small></td>
+                            <td>{{ result.quarter.get_name_display }}</td>
+                            <td><span class="badge bg-info fs-6">{{ result.score }}</span></td>
+                            <td><strong class="text-success">{{ result.get_grade_display }}</strong></td>
+                            <td>{{ result.teacher.get_full_name }}</td>
+                            <td>{{ result.submitted_at|date:"d M Y, H:i" }}</td>
+                            <td class="text-center">
+                                <a href="{% url 'school:approve_result' result.pk %}"
+                                   class="btn btn-sm btn-success"
+                                   onclick="return confirm('Approve this result for {{ result.student.get_full_name }}?')">
+                                    <i class="fas fa-check"></i> Approve
+                                </a>
+                                <a href="{% url 'school:reject_result' result.pk %}"
+                                   class="btn btn-sm btn-danger"
+                                   onclick="return confirm('Reject this result? This cannot be undone.')">
+                                    <i class="fas fa-times"></i> Reject
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5 text-muted">
+                <i class="fas fa-check-circle fa-4x mb-3 opacity-50"></i>
+                <h4>All results are approved!</h4>
+                <p>No pending submissions at the moment.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

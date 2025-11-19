@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load result_filters %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h3>Enter Results</h3>
+            <p class="mb-0">
+                <strong>Quarter:</strong> {{ quarter.get_name_display }} | 
+                <strong>Class:</strong> {{ class_obj.name }} | 
+                <strong>Course:</strong> {{ course.name }}
+            </p>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <table class="table table-bordered table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Admission #</th>
+                            <th>Student Name</th>
+                            <th>Score (0-100)</th>
+                            <th>Comment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        {% with result=result_dict|get_item:student.id %}
+                        <tr>
+                            <td>{{ student.admission_number }}</td>
+                            <td>{{ student.get_full_name }}</td>
+                            <td>
+                                <input type="number" name="score_{{ student.id }}"
+                                       class="form-control" min="0" max="100" step="0.01"
+                                       value="{% if result %}{{ result.score }}{% endif %}">
+                            </td>
+                            <td>
+                                <textarea name="comment_{{ student.id }}" class="form-control" rows="2">
+{% if result %}{{ result.teacher_comment }}{% endif %}</textarea>
+                            </td>
+                        </tr>
+                        {% endwith %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-success btn-lg">Save Draft</button>
+                    <a href="{% url 'school:submit_results' quarter.id class_obj.id course.id %}" 
+                       class="btn btn-warning btn-lg ms-3"
+                       onclick="return confirm('Submit all results for approval?')">Submit for Approval</a>
+                    <a href="{% url 'school:quarter_select' %}" class="btn btn-secondary btn-lg ms-3">Back</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Teacher Dashboard - AARMS{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+
+    <h2 class="mb-4 text-primary fw-bold">
+        Welcome, {{ user.get_full_name }}!
+    </h2>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">My Assigned Classes & Courses</h4>
+        </div>
+        <div class="card-body p-0">
+            {% if my_classes %}
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Class</th>
+                            <th>Course</th>
+                            <th>Students</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for assignment in my_classes %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td><strong>{{ assignment.class_assigned.name }}</strong></td>
+                            <td>{{ assignment.course.name }} ({{ assignment.course.code }})</td>
+                            <td>
+                                <span class="badge bg-info">
+                                    {{ assignment.class_assigned.students.count }} students
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{% url 'school:quarter_select' %}" class="btn btn-sm btn-success">
+                                    Enter Results
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center py-5 text-muted">
+                                No classes assigned yet.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5 text-muted">
+                <i class="fas fa-chalkboard-teacher fa-4x mb-3"></i>
+                <p>You have no teaching assignments yet.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="mt-4 text-center">
+        <small class="text-muted">Click "Enter Results" to select quarter and begin grading</small>
+    </div>
+</div>
+{% endblock %}

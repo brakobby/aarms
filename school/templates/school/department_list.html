@@ -1,0 +1,35 @@
+<!-- ==========================================
+     DEPARTMENT LIST TEMPLATE
+     school/templates/school/department_list.html
+     ========================================== -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Departments</h2>
+        <a href="{% url 'school:department_create' %}" class="btn btn-primary">Add Department</a>
+    </div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Code</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dept in departments %}
+                <tr>
+                    <td>{{ dept.name }}</td>
+                    <td>{{ dept.code }}</td>
+                    <td>{{ dept.description }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

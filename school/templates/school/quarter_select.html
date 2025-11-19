@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Select Quarter - AARMS{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+
+    <h2 class="mb-4 text-primary fw-bold">
+        Enter Results - Select Quarter & Class
+    </h2>
+
+    {% if quarters %}
+        {% for quarter in quarters %}
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    {{ quarter.get_name_display }} 
+                    <small class="opacity-75">- {{ quarter.academic_year.name }}</small>
+                </h4>
+            </div>
+            <div class="card-body">
+                <h5 class="text-dark mb-3">Your Assigned Classes:</h5>
+                
+                {% for assignment in assignments %}
+                    {% if assignment.academic_year == quarter.academic_year %}
+                    <a href="{% url 'school:result_entry' quarter.id assignment.class_assigned.id assignment.course.id %}"
+                       class="btn btn-success me-2 mb-2">
+                        {{ assignment.class_assigned.name }} → {{ assignment.course.name }}
+                        <small>({{ assignment.course.code }})</small>
+                    </a>
+                    {% endif %}
+                {% empty %}
+                    <p class="text-muted">No classes assigned for this quarter.</p>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-info text-center">
+            <h4>No Active Quarters</h4>
+            <p>Contact admin to activate the current quarter.</p>
+        </div>
+    {% endif %}
+
+    <div class="mt-4">
+        <a href="{% url 'school:dashboard' %}" class="btn btn-outline-secondary">
+            ← Back to Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %}

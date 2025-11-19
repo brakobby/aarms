@@ -1,0 +1,41 @@
+<!-- ==========================================
+     CLASS LIST TEMPLATE
+     school/templates/school/class_list.html
+     ========================================== -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Classes</h2>
+        <a href="{% url 'school:class_create' %}" class="btn btn-primary">Create Class</a>
+    </div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Department</th>
+                    <th>Class Teacher</th>
+                    <th>Academic Year</th>
+                    <th>Capacity</th>
+                    <th>Students</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for class in classes %}
+                <tr>
+                    <td>{{ class.name }}</td>
+                    <td>{{ class.department.name }}</td>
+                    <td>{{ class.class_teacher.get_full_name|default:"-" }}</td>
+                    <td>{{ class.academic_year.name }}</td>
+                    <td>{{ class.capacity }}</td>
+                    <td>{{ class.students.count }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

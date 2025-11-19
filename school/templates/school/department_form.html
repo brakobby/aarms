@@ -1,0 +1,28 @@
+<!-- ==========================================
+     DEPARTMENT FORM TEMPLATE
+     school/templates/school/department_form.html
+     ========================================== -->
+
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Add Department</h2>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-group">
+                <label class="form-label">{{ field.label }}</label>
+                {{ field }}
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a href="{% url 'school:department_list' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
