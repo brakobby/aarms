@@ -1,35 +1,59 @@
-<!-- ==========================================
-     DEPARTMENT LIST TEMPLATE
-     school/templates/school/department_list.html
-     ========================================== -->
-
 {% extends 'base.html' %}
 
+{% block title %}Departments - AARMS{% endblock %}
+
 {% block content %}
-<div class="card">
-    <div class="card-header">
-        <h2>Departments</h2>
-        <a href="{% url 'school:department_create' %}" class="btn btn-primary">Add Department</a>
+<div class="container-fluid px-4 py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-building me-2"></i>Department Management</h2>
+        <a href="{% url 'school:department_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Add New Department
+        </a>
     </div>
-    <div class="card-body">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Code</th>
-                    <th>Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for dept in departments %}
-                <tr>
-                    <td>{{ dept.name }}</td>
-                    <td>{{ dept.code }}</td>
-                    <td>{{ dept.description }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+
+    <div class="row">
+        {% for department in departments %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">{{ department.name }}</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">{{ department.description|default:"No description provided." }}</p>
+                    <div class="mb-2">
+                        <strong>Code:</strong> {{ department.code }}
+                    </div>
+                    <div class="mb-3">
+                        <strong>Classes:</strong> {{ department.classes.count }}
+                    </div>
+                    <div class="mb-3">
+                        <strong>Courses:</strong> {{ department.courses.count }}
+                    </div>
+                </div>
+                <div class="card-footer bg-white">
+                    <div class="btn-group w-100">
+                        <a href="{% url 'school:department_edit' department.pk %}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-edit me-1"></i>Edit
+                        </a>
+                        <a href="{% url 'school:department_delete' department.pk %}" class="btn btn-outline-danger btn-sm">
+                            <i class="fas fa-trash me-1"></i>Delete
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="text-center py-5">
+                <i class="fas fa-building fa-3x text-muted mb-3"></i>
+                <h5>No departments found</h5>
+                <p class="text-muted">Get started by creating your first department.</p>
+                <a href="{% url 'school:department_create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Add Department
+                </a>
+            </div>
+        </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}

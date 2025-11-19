@@ -1,28 +1,115 @@
 {% extends 'base.html' %}
-{% load widget_tweaks %}
+
+{% block title %}{% if student %}Edit{% else %}Add{% endif %} Student - AARMS{% endblock %}
 
 {% block content %}
-<div class="card">
-    <div class="card-header">
-        <h2>{% if student %}Edit{% else %}Add{% endif %} Student</h2>
-    </div>
-    <div class="card-body">
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {% for field in form %}
-            <div class="form-group">
-                <label class="form-label">{{ field.label }}</label>
-                {{ field }}
-                {% if field.errors %}
-                    {% for error in field.errors %}
-                    <div class="form-error">{{ error }}</div>
-                    {% endfor %}
-                {% endif %}
+<div class="container-fluid px-4 py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas {% if student %}fa-edit{% else %}fa-user-plus{% endif %} me-2"></i>
+                        {% if student %}Edit{% else %}Add New{% endif %} Student
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5 class="mb-3">Personal Information</h5>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Admission Number *</label>
+                                        {{ form.admission_number }}
+                                        {% if form.admission_number.errors %}
+                                        <div class="text-danger">{{ form.admission_number.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Current Class</label>
+                                        {{ form.current_class }}
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">First Name *</label>
+                                        {{ form.first_name }}
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Middle Name</label>
+                                        {{ form.middle_name }}
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Last Name *</label>
+                                        {{ form.last_name }}
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Gender *</label>
+                                        {{ form.gender }}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Date of Birth *</label>
+                                        {{ form.date_of_birth }}
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Student Photo</label>
+                                    {{ form.photo }}
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <h5 class="mb-3">Guardian Information</h5>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Guardian Name *</label>
+                                    {{ form.guardian_name }}
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Guardian Phone *</label>
+                                        {{ form.guardian_phone }}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Guardian Email</label>
+                                        {{ form.guardian_email }}
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Guardian Address *</label>
+                                    {{ form.guardian_address }}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between">
+                                    <a href="{% url 'school:student_list' %}" class="btn btn-secondary">
+                                        <i class="fas fa-arrow-left me-2"></i>Back to List
+                                    </a>
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-save me-2"></i>
+                                        {% if student %}Update{% else %}Create{% endif %} Student
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-            {% endfor %}
-            <button type="submit" class="btn btn-primary">Save</button>
-            <a href="{% url 'school:student_list' %}" class="btn btn-secondary">Cancel</a>
-        </form>
+        </div>
     </div>
 </div>
 {% endblock %}

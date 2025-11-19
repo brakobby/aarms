@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if teacher %}Edit{% else %}Add{% endif %} Teacher - AARMS{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas {% if teacher %}fa-edit{% else %}fa-user-plus{% endif %} me-2"></i>
+                        {% if teacher %}Edit{% else %}Add New{% endif %} Teacher
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Username *</label>
+                                {{ form.username }}
+                                {% if form.username.errors %}
+                                <div class="text-danger">{{ form.username.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{% if teacher %}New {% endif %}Password {% if not teacher %}*{% endif %}</label>
+                                {{ form.password }}
+                                {% if not teacher %}
+                                <div class="form-text">Password is required for new teachers</div>
+                                {% else %}
+                                <div class="form-text">Leave blank to keep current password</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">First Name *</label>
+                                {{ form.first_name }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Last Name *</label>
+                                {{ form.last_name }}
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Email</label>
+                                {{ form.email }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Phone</label>
+                                {{ form.phone }}
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Role *</label>
+                                {{ form.role }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Profile Picture</label>
+                                <input type="file" name="profile_picture" class="form-control">
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between">
+                                    <a href="{% url 'school:teacher_list' %}" class="btn btn-secondary">
+                                        <i class="fas fa-arrow-left me-2"></i>Back to List
+                                    </a>
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-save me-2"></i>
+                                        {% if teacher %}Update{% else %}Create{% endif %} Teacher
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block title %}Teacher Assignments - AARMS{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-clipboard-list me-2"></i>Teacher Assignments</h2>
+        <a href="{% url 'school:assignment_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Create Assignment
+        </a>
+    </div>
+
+    <!-- Assignments Table -->
+    <div class="card">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">All Assignments ({{ assignments.count }})</h5>
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    <i class="fas fa-cog me-2"></i>Actions
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-file-export me-2"></i>Export CSV</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-print me-2"></i>Print List</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Teacher</th>
+                            <th>Course</th>
+                            <th>Class</th>
+                            <th>Academic Year</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for assignment in assignments %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    {% if assignment.teacher.profile_picture %}
+                                    <img src="{{ assignment.teacher.profile_picture.url }}" alt="{{ assignment.teacher.get_full_name }}" class="rounded-circle me-3" width="40" height="40">
+                                    {% else %}
+                                    <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    {% endif %}
+                                    <div>
+                                        <h6 class="mb-0">{{ assignment.teacher.get_full_name }}</h6>
+                                        <small class="text-muted">{{ assignment.teacher.get_role_display }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <strong>{{ assignment.course.code }}</strong><br>
+                                <small class="text-muted">{{ assignment.course.name }}</small>
+                            </td>
+                            <td>
+                                <span class="badge bg-primary">{{ assignment.class_assigned.name }}</span><br>
+                                <small class="text-muted">{{ assignment.class_assigned.department.name }}</small>
+                            </td>
+                            <td>{{ assignment.academic_year.name }}</td>
+                            <td>{{ assignment.created_at|date:"M d, Y" }}</td>
+                            <td>
+                                <div class="btn-group">
+                                    <a href="{% url 'school:assignment_edit' assignment.pk %}" class="btn btn-sm btn-outline-secondary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'school:assignment_delete' assignment.pk %}" class="btn btn-sm btn-outline-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center py-4">
+                                <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
+                                <h5>No assignments found</h5>
+                                <p class="text-muted">Get started by creating your first teacher assignment.</p>
+                                <a href="{% url 'school:assignment_create' %}" class="btn btn-primary">
+                                    <i class="fas fa-plus me-2"></i>Create Assignment
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

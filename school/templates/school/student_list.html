@@ -1,37 +1,174 @@
 {% extends 'base.html' %}
 
+{% block title %}Students - AARMS{% endblock %}
+
 {% block content %}
-<div class="card">
-    <div class="card-header">
-        <h2>Students</h2>
-        <a href="{% url 'school:student_create' %}" class="btn btn-primary">Add Student</a>
+<div class="container-fluid px-4 py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-user-graduate me-2"></i>Student Management</h2>
+        <a href="{% url 'school:student_create' %}" class="btn btn-primary">
+            <i class="fas fa-user-plus me-2"></i>Add New Student
+        </a>
     </div>
-    <div class="card-body">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Admission #</th>
-                    <th>Name</th>
-                    <th>Class</th>
-                    <th>Gender</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for student in students %}
-                <tr>
-                    <td>{{ student.admission_number }}</td>
-                    <td>{{ student.get_full_name }}</td>
-                    <td>{{ student.current_class.name }}</td>
-                    <td>{{ student.get_gender_display }}</td>
-                    <td>
-                        <a href="{% url 'school:student_detail' student.pk %}" class="btn btn-sm btn-outline">View</a>
-                        <a href="{% url 'school:student_edit' student.pk %}" class="btn btn-sm btn-primary">Edit</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+
+    <!-- Search and Filters -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-6">
+                    <input type="text" name="search" class="form-control" placeholder="Search by name or admission number..." value="{{ request.GET.search }}">
+                </div>
+                <div class="col-md-3">
+                    <select name="class" class="form-control">
+                        <option value="">All Classes</option>
+                        {% for class in classes %}
+                        <option value="{{ class.id }}" {% if request.GET.class == class.id|stringformat:"s" %}selected{% endif %}>
+                            {{ class.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-outline-primary w-100">
+                        <i class="fas fa-search me-2"></i>Search
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
+
+    <!-- Students Table -->
+    <div class="card">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">All Students ({{ students.count }})</h5>
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    <i class="fas fa-cog me-2"></i>Actions
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-file-export me-2"></i>Export CSV</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-print me-2"></i>Print List</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th><input type="checkbox" id="select-all"></th>
+                            <th>Admission No.</th>
+                            <th>Student Name</th>
+                            <th>Gender</th>
+                            <th>Class</th>
+                            <th>Guardian Phone</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            <td><input type="checkbox" name="student_ids" value="{{ student.id }}"></td>
+                            <td><strong>{{ student.admission_number }}</strong></td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    {% if student.photo %}
+                                    <img src="{{ student.photo.url }}" alt="{{ student.get_full_name }}" class="rounded-circle me-3" width="40" height="40">
+                                    {% else %}
+                                    <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    {% endif %}
+                                    <div>
+                                        <h6 class="mb-0">{{ student.get_full_name }}</h6>
+                                        <small class="text-muted">{{ student.guardian_name }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ student.get_gender_display }}</td>
+                            <td>
+                                {% if student.current_class %}
+                                <span class="badge bg-primary">{{ student.current_class.name }}</span>
+                                {% else %}
+                                <span class="badge bg-secondary">Not Assigned</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ student.guardian_phone }}</td>
+                            <td>
+                                {% if student.is_active %}
+                                <span class="badge bg-success">Active</span>
+                                {% else %}
+                                <span class="badge bg-danger">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group">
+                                    <a href="{% url 'school:student_detail' student.pk %}" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{% url 'school:student_edit' student.pk %}" class="btn btn-sm btn-outline-secondary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-sm btn-outline-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center py-4">
+                                <i class="fas fa-user-slash fa-3x text-muted mb-3"></i>
+                                <h5>No students found</h5>
+                                <p class="text-muted">Get started by adding your first student.</p>
+                                <a href="{% url 'school:student_create' %}" class="btn btn-primary">
+                                    <i class="fas fa-user-plus me-2"></i>Add Student
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    {% if students.has_other_pages %}
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if students.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ students.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Previous</a>
+            </li>
+            {% endif %}
+            
+            {% for i in students.paginator.page_range %}
+            <li class="page-item {% if students.number == i %}active{% endif %}">
+                <a class="page-link" href="?page={{ i }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">{{ i }}</a>
+            </li>
+            {% endfor %}
+            
+            {% if students.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ students.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Next</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
 </div>
+
+{% block extra_js %}
+<script>
+    // Select all checkbox
+    document.getElementById('select-all').addEventListener('change', function() {
+        const checkboxes = document.querySelectorAll('input[name="student_ids"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = this.checked;
+        });
+    });
+</script>
+{% endblock %}
 {% endblock %}

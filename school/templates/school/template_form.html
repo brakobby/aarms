@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if template %}Edit{% else %}Create{% endif %} Template - AARMS{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas {% if template %}fa-edit{% else %}fa-plus{% endif %} me-2"></i>
+                        {% if template %}Edit{% else %}Create New{% endif %} Result Template
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Template Name *</label>
+                                {{ form.name }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Department *</label>
+                                {{ form.department }}
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Template Type *</label>
+                                {{ form.template_type }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check form-switch mt-4">
+                                    {{ form.is_active }}
+                                    <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
+                                        Active Template
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">HTML Content *</label>
+                            {{ form.html_content }}
+                            <div class="form-text">
+                                Use HTML to design your result template. You can use variables like 
+                                <code>&#123;&#123; student.name &#125;&#125;</code>, 
+                                <code>&#123;&#123; course.name &#125;&#125;</code>, 
+                                <code>&#123;&#123; score &#125;&#125;</code>, etc.
+                            </div>
+                        </div>
+
+                        <!-- Template Variables Reference -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-info text-white">
+                                <h6 class="mb-0"><i class="fas fa-list me-2"></i>Available Template Variables</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6>Student Information</h6>
+                                        <ul class="list-unstyled">
+                                            <li><code>&#123;&#123; student.admission_number &#125;&#125;</code></li>
+                                            <li><code>&#123;&#123; student.first_name &#125;&#125;</code></li>
+                                            <li><code>&#123;&#123; student.last_name &#125;&#125;</code></li>
+                                            <li><code>&#123;&#123; student.get_full_name &#125;&#125;</code></li>
+                                            <li><code>&#123;&#123; student.gender &#125;&#125;</code></li>
+                                            <li><code>&#123;&#123; student.current_class.name &#125;&#125;</code></li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6>Academic Information</h6>
+                                        <ul class="list-unstyled">
+                                            <li><code>&#123;&#123; course.name &#125;&#125;</code></li>
+                                            <li><code>&#123;&#123; course.code &#125;&#125;</code></li>
+                                            <li><code>&#123;&#123; quarter.name &#125;&#125;</code></li>
+                                            <li><code>&#123;&#123; quarter.academic_year.name &#125;&#125;</code></li>
+                                            <li><code>&#123;&#123; score &#125;&#125;</code></li>
+                                            <li><code>&#123;&#123; grade &#125;&#125;</code></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'school:template_list' %}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Back to List
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-save me-2"></i>
+                                {% if template %}Update{% else %}Create{% endif %} Template
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

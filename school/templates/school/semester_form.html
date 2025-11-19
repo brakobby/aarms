@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if semester %}Edit{% else %}Add{% endif %} Semester - AARMS{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas {% if semester %}fa-edit{% else %}fa-plus{% endif %} me-2"></i>
+                        {% if semester %}Edit{% else %}Add New{% endif %} Semester
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Semester *</label>
+                                {{ form.name }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Academic Year *</label>
+                                {{ form.academic_year }}
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Quarter 1 *</label>
+                                {{ form.quarter_1 }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Quarter 2 *</label>
+                                {{ form.quarter_2 }}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                {{ form.is_locked }}
+                                <label class="form-check-label" for="{{ form.is_locked.id_for_label }}">
+                                    Lock semester (prevent modifications)
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Note:</strong> Semester 1 (S1) should include Quarter 1 and Quarter 2. 
+                            Semester 2 (S2) should include Quarter 3 and Quarter 4.
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'school:semester_list' %}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Back to List
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-save me-2"></i>
+                                {% if semester %}Update{% else %}Create{% endif %} Semester
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

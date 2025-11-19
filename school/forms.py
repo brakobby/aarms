@@ -1,9 +1,8 @@
+# school/forms.py
 from django import forms
 from .models import *
 
-
 class StudentForm(forms.ModelForm):
-    """Student form"""
     class Meta:
         model = Student
         fields = [
@@ -26,9 +25,7 @@ class StudentForm(forms.ModelForm):
             'guardian_address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
         }
 
-
 class DepartmentForm(forms.ModelForm):
-    """Department form"""
     class Meta:
         model = Department
         fields = ['name', 'code', 'description']
@@ -38,9 +35,7 @@ class DepartmentForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
         }
 
-
 class AcademicYearForm(forms.ModelForm):
-    """Academic year form"""
     class Meta:
         model = AcademicYear
         fields = ['name', 'start_date', 'end_date', 'is_active']
@@ -51,9 +46,7 @@ class AcademicYearForm(forms.ModelForm):
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
 
-
 class ClassForm(forms.ModelForm):
-    """Class form"""
     class Meta:
         model = Class
         fields = ['name', 'department', 'class_teacher', 'academic_year', 'capacity']
@@ -65,9 +58,7 @@ class ClassForm(forms.ModelForm):
             'capacity': forms.NumberInput(attrs={'class': 'form-control'}),
         }
 
-
 class CourseForm(forms.ModelForm):
-    """Course form"""
     class Meta:
         model = Course
         fields = ['name', 'code', 'department', 'description']
@@ -78,9 +69,7 @@ class CourseForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
         }
 
-
 class TeacherAssignmentForm(forms.ModelForm):
-    """Teacher assignment form"""
     class Meta:
         model = TeacherAssignment
         fields = ['teacher', 'course', 'class_assigned', 'academic_year']
@@ -91,9 +80,7 @@ class TeacherAssignmentForm(forms.ModelForm):
             'academic_year': forms.Select(attrs={'class': 'form-control'}),
         }
 
-
 class QuarterForm(forms.ModelForm):
-    """Quarter form"""
     class Meta:
         model = Quarter
         fields = ['name', 'academic_year', 'start_date', 'end_date', 'is_active']
@@ -102,5 +89,50 @@ class QuarterForm(forms.ModelForm):
             'academic_year': forms.Select(attrs={'class': 'form-control'}),
             'start_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'end_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+
+class SemesterForm(forms.ModelForm):
+    class Meta:
+        model = Semester
+        fields = ['name', 'academic_year', 'quarter_1', 'quarter_2', 'is_locked']
+        widgets = {
+            'name': forms.Select(attrs={'class': 'form-control'}),
+            'academic_year': forms.Select(attrs={'class': 'form-control'}),
+            'quarter_1': forms.Select(attrs={'class': 'form-control'}),
+            'quarter_2': forms.Select(attrs={'class': 'form-control'}),
+            'is_locked': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+class TeacherForm(forms.ModelForm):
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        required=False
+    )
+    profile_picture = forms.ImageField(
+        required=False,
+        widget=forms.FileInput(attrs={'class': 'form-control'})
+    )
+    
+    class Meta:
+        model = User
+        fields = ['username', 'password', 'first_name', 'last_name', 'email', 'phone', 'role']
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control'}),
+            'role': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+class ResultTemplateForm(forms.ModelForm):
+    class Meta:
+        model = ResultTemplate
+        fields = ['name', 'department', 'template_type', 'html_content', 'is_active']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'department': forms.Select(attrs={'class': 'form-control'}),
+            'template_type': forms.Select(attrs={'class': 'form-control'}),
+            'html_content': forms.Textarea(attrs={'class': 'form-control', 'rows': 10}),
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }

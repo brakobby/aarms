@@ -1,31 +1,55 @@
-<!-- ==========================================
-     COURSE LIST TEMPLATE
-     school/templates/school/course_list.html
-     ========================================== -->
-
 {% extends 'base.html' %}
 
+{% block title %}Courses - AARMS{% endblock %}
+
 {% block content %}
-<div class="card">
-    <div class="card-header">
-        <h2>Courses</h2>
-        <a href="{% url 'school:course_create' %}" class="btn btn-primary">Add Course</a>
+<div class="container-fluid px-4 py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-book me-2"></i>Course Management</h2>
+        <a href="{% url 'school:course_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Add New Course
+        </a>
     </div>
-    <div class="card-body">
-        <table class="table">
-            <thead>
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-light">
                 <tr>
-                    <th>Code</th>
-                    <th>Name</th>
+                    <th>Course Code</th>
+                    <th>Course Name</th>
                     <th>Department</th>
+                    <th>Description</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for course in courses %}
                 <tr>
-                    <td>{{ course.code }}</td>
+                    <td><strong>{{ course.code }}</strong></td>
                     <td>{{ course.name }}</td>
                     <td>{{ course.department.name }}</td>
+                    <td>{{ course.description|truncatewords:10|default:"-" }}</td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="{% url 'school:course_edit' course.pk %}" class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="{% url 'school:course_delete' course.pk %}" class="btn btn-sm btn-outline-danger">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center py-4">
+                        <i class="fas fa-book fa-3x text-muted mb-3"></i>
+                        <h5>No courses found</h5>
+                        <p class="text-muted">Get started by creating your first course.</p>
+                        <a href="{% url 'school:course_create' %}" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>Add Course
+                        </a>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

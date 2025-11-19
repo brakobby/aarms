@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}Teachers - AARMS{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-user-tie me-2"></i>Teacher Management</h2>
+        <a href="{% url 'school:teacher_create' %}" class="btn btn-primary">
+            <i class="fas fa-user-plus me-2"></i>Add New Teacher
+        </a>
+    </div>
+
+    <!-- Teachers Table -->
+    <div class="card">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">All Teachers ({{ teachers.count }})</h5>
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    <i class="fas fa-cog me-2"></i>Actions
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-file-export me-2"></i>Export CSV</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-print me-2"></i>Print List</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Username</th>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for teacher in teachers %}
+                        <tr>
+                            <td><strong>{{ teacher.username }}</strong></td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    {% if teacher.profile_picture %}
+                                    <img src="{{ teacher.profile_picture.url }}" alt="{{ teacher.get_full_name }}" class="rounded-circle me-3" width="40" height="40">
+                                    {% else %}
+                                    <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    {% endif %}
+                                    <div>
+                                        <h6 class="mb-0">{{ teacher.get_full_name }}</h6>
+                                        <small class="text-muted">Last login: {{ teacher.last_login|date:"M d, Y"|default:"Never" }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ teacher.email|default:"-" }}</td>
+                            <td>{{ teacher.phone|default:"-" }}</td>
+                            <td>
+                                <span class="badge {% if teacher.role == 'class_teacher' %}bg-warning{% else %}bg-info{% endif %}">
+                                    {{ teacher.get_role_display }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if teacher.is_active %}
+                                <span class="badge bg-success">Active</span>
+                                {% else %}
+                                <span class="badge bg-danger">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group">
+                                    <a href="{% url 'school:teacher_edit' teacher.pk %}" class="btn btn-sm btn-outline-secondary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'school:teacher_delete' teacher.pk %}" class="btn btn-sm btn-outline-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center py-4">
+                                <i class="fas fa-user-slash fa-3x text-muted mb-3"></i>
+                                <h5>No teachers found</h5>
+                                <p class="text-muted">Get started by adding your first teacher.</p>
+                                <a href="{% url 'school:teacher_create' %}" class="btn btn-primary">
+                                    <i class="fas fa-user-plus me-2"></i>Add Teacher
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

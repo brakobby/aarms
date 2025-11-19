@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if assignment %}Edit{% else %}Create{% endif %} Assignment - AARMS{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas {% if assignment %}fa-edit{% else %}fa-plus{% endif %} me-2"></i>
+                        {% if assignment %}Edit{% else %}Create New{% endif %} Teacher Assignment
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Teacher *</label>
+                                {{ form.teacher }}
+                                {% if form.teacher.errors %}
+                                <div class="text-danger">{{ form.teacher.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Course *</label>
+                                {{ form.course }}
+                                {% if form.course.errors %}
+                                <div class="text-danger">{{ form.course.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Class *</label>
+                                {{ form.class_assigned }}
+                                {% if form.class_assigned.errors %}
+                                <div class="text-danger">{{ form.class_assigned.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Academic Year *</label>
+                                {{ form.academic_year }}
+                                {% if form.academic_year.errors %}
+                                <div class="text-danger">{{ form.academic_year.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Note:</strong> Each teacher can only be assigned to a specific course in a class once per academic year.
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between">
+                                    <a href="{% url 'school:assignment_list' %}" class="btn btn-secondary">
+                                        <i class="fas fa-arrow-left me-2"></i>Back to List
+                                    </a>
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-save me-2"></i>
+                                        {% if assignment %}Update{% else %}Create{% endif %} Assignment
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

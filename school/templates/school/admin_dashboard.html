@@ -4,148 +4,662 @@
 {% block title %}Admin Dashboard - AARMS{% endblock %}
 
 {% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
+    :root {
+        --primary: #5d5fef;
+        --primary-dark: #4c4cc7;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+        --info: #3b82f6;
+        --dark: #1e293b;
+        --gray: #64748b;
+        --border: #e2e8f0;
+    }
+
+    body { 
+        font-family: 'Inter', sans-serif; 
+        background: #f8fafc;
+    }
+
+    /* Hero Header */
+    .admin-hero {
+        background: linear-gradient(135deg, #5d5fef 0%, #7c6aff 50%, #9d7eff 100%);
+        color: white;
+        border-radius: 24px;
+        padding: 3rem 2.5rem;
+        margin-bottom: 2.5rem;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(93, 95, 239, 0.3);
+    }
+
+    .admin-hero::before {
+        content: '';
+        position: absolute;
+        top: -50%; right: -20%;
+        width: 600px; height: 600px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+    }
+
+    .admin-hero h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .admin-hero p {
+        font-size: 1.1rem;
+        opacity: 0.95;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+    }
+
     .stat-card {
         background: white;
-        border-radius: 15px;
-        padding: 1.8rem;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        transition: all 0.3s ease;
-        height: 100%;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--border);
     }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0;
+        width: 6px; height: 100%;
+        background: var(--stat-color);
+    }
+
     .stat-card:hover {
         transform: translateY(-8px);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.12);
     }
-    .stat-icon {
-        width: 70px; height: 70px; border-radius: 15px;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 2rem; color: white;
-    }
-    .quick-actions .col {
-        margin-bottom: 1rem;
-    }
-    .action-card {
-        background: white;
-        border-radius: 12px;
-        padding: 1.5rem;
-        text-align: center;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-        transition: all 0.3s;
-        height: 100%;
-    }
-    .action-card:hover {
-        transform: translateY(-5px);
+
+    .stat-card .icon-wrapper {
+        width: 72px;
+        height: 72px;
+        border-radius: 18px;
+        background: var(--stat-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.2rem;
         box-shadow: 0 10px 25px rgba(0,0,0,0.15);
     }
-    .action-card i {
+
+    .stat-card .icon-wrapper i {
+        font-size: 2rem;
+        color: white;
+    }
+
+    .stat-value {
+        font-size: 2.8rem;
+        font-weight: 800;
+        color: var(--dark);
+        line-height: 1;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        color: var(--gray);
+        font-size: 0.95rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .stat-trend {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        margin-top: 0.8rem;
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .trend-up {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .trend-down {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    /* Management Sections */
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+    }
+
+    .section-title i {
+        color: var(--primary);
+    }
+
+    .action-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+    }
+
+    .action-btn {
+        background: white;
+        border-radius: 18px;
+        padding: 2rem 1.5rem;
+        text-align: center;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        text-decoration: none;
+        display: block;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .action-btn::before {
+        content: '';
+        position: absolute;
+        bottom: 0; left: 0;
+        width: 100%;
+        height: 5px;
+        background: var(--btn-color);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+
+    .action-btn:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 45px rgba(93, 95, 239, 0.2);
+        border-color: var(--btn-color);
+    }
+
+    .action-btn:hover::before {
+        transform: scaleX(1);
+    }
+
+    .action-btn i {
         font-size: 3rem;
+        color: var(--btn-color);
         margin-bottom: 1rem;
-        color: #5d5fef;
+        transition: all 0.3s;
+    }
+
+    .action-btn:hover i {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    .action-btn h6 {
+        color: var(--dark);
+        font-weight: 600;
+        font-size: 1rem;
+        margin: 0;
+    }
+
+    .action-btn .badge {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: var(--danger);
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 0.35rem 0.65rem;
+        border-radius: 20px;
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+    }
+
+    /* Recent Activity */
+    .activity-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        margin-bottom: 2rem;
+    }
+
+    .activity-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 1.2rem;
+        padding: 1.2rem;
+        border-bottom: 1px solid var(--border);
+        transition: background 0.2s;
+    }
+
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+
+    .activity-item:hover {
+        background: #f8fafc;
+        border-radius: 12px;
+    }
+
+    .activity-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: var(--activity-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .activity-icon i {
+        color: white;
+        font-size: 1.2rem;
+    }
+
+    .activity-content h6 {
+        font-weight: 600;
+        color: var(--dark);
+        margin-bottom: 0.3rem;
+    }
+
+    .activity-content p {
+        font-size: 0.9rem;
+        color: var(--gray);
+        margin: 0;
+    }
+
+    .activity-time {
+        font-size: 0.8rem;
+        color: var(--gray);
+        margin-top: 0.5rem;
+    }
+
+    /* Quick Stats Bar */
+    .quick-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .quick-stat {
+        background: linear-gradient(135deg, var(--stat-bg-start), var(--stat-bg-end));
+        color: white;
+        padding: 1.5rem;
+        border-radius: 16px;
+        text-align: center;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .quick-stat-value {
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 0.3rem;
+    }
+
+    .quick-stat-label {
+        font-size: 0.85rem;
+        opacity: 0.95;
+        font-weight: 500;
+    }
+
+    /* Reports Section */
+    .report-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+    }
+
+    .report-card {
+        background: white;
+        border-radius: 18px;
+        padding: 1.8rem;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        transition: all 0.3s;
+        text-decoration: none;
+        display: block;
+        border: 2px solid transparent;
+    }
+
+    .report-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+        border-color: var(--report-color);
+    }
+
+    .report-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 14px;
+        background: var(--report-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+
+    .report-icon i {
+        color: white;
+        font-size: 1.6rem;
+    }
+
+    .report-card h6 {
+        color: var(--dark);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .report-card p {
+        color: var(--gray);
+        font-size: 0.9rem;
+        margin: 0;
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid">
+<div class="container-fluid px-4 py-4">
 
-    <h1 class="h3 mb-4 text-primary fw-bold">
-        Welcome back, {{ user.get_full_name }}!
-    </h1>
+    <!-- Hero Section -->
+    <div class="admin-hero">
+        <h1>Admin Control Center</h1>
+        <p>Complete oversight and management of Agape Academy</p>
+        <small style="opacity: 0.85;">{{ today|date:"l, F j, Y" }} • {{ now|date:"h:i A" }}</small>
+    </div>
 
-    <!-- Stats Grid -->
-    <div class="row g-4 mb-5">
-        <div class="col-md-3">
-            <div class="stat-card d-flex align-items-center">
-                <div class="stat-icon me-4" style="background: linear-gradient(135deg, #667eea, #764ba2);">
-                    <i class="fas fa-user-graduate"></i>
-                </div>
-                <div>
-                    <h4 class="mb-0 fw-bold">{{ total_students|default:"0" }}</h4>
-                    <small class="text-muted">Total Students</small>
-                </div>
+    <!-- Main Stats -->
+    <div class="stats-grid">
+        <div class="stat-card" style="--stat-color: linear-gradient(135deg, #667eea, #764ba2);">
+            <div class="icon-wrapper">
+                <i class="fas fa-user-graduate"></i>
             </div>
+            <div class="stat-value">{{ total_students|default:"0" }}</div>
+            <div class="stat-label">Total Students</div>
+            <span class="stat-trend trend-up">
+                <i class="fas fa-arrow-up"></i> 12% this term
+            </span>
         </div>
 
-        <div class="col-md-3">
-            <div class="stat-card d-flex align-items-center">
-                <div class="stat-icon me-4" style="background: linear-gradient(135deg, #f093fb, #f5576c);">
-                    <i class="fas fa-chalkboard-teacher"></i>
-                </div>
-                <div>
-                    <h4 class="mb-0 fw-bold">{{ total_teachers|default:"0" }}</h4>
-                    <small class="text-muted">Teachers</small>
-                </div>
+        <div class="stat-card" style="--stat-color: linear-gradient(135deg, #f093fb, #f5576c);">
+            <div class="icon-wrapper">
+                <i class="fas fa-chalkboard-teacher"></i>
             </div>
+            <div class="stat-value">{{ total_teachers|default:"0" }}</div>
+            <div class="stat-label">Active Teachers</div>
+            <span class="stat-trend trend-up">
+                <i class="fas fa-arrow-up"></i> 3 new
+            </span>
         </div>
 
-        <div class="col-md-3">
-            <div class="stat-card d-flex align-items-center">
-                <div class="stat-icon me-4" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">
-                    <i class="fas fa-chalkboard"></i>
-                </div>
-                <div>
-                    <h4 class="mb-0 fw-bold">{{ total_classes|default:"0" }}</h4>
-                    <small class="text-muted">Classes</small>
-                </div>
+        <div class="stat-card" style="--stat-color: linear-gradient(135deg, #4facfe, #00f2fe);">
+            <div class="icon-wrapper">
+                <i class="fas fa-chalkboard"></i>
             </div>
+            <div class="stat-value">{{ total_classes|default:"0" }}</div>
+            <div class="stat-label">Active Classes</div>
         </div>
 
-        <div class="col-md-3">
-            <div class="stat-card d-flex align-items-center">
-                <div class="stat-icon me-4" style="background: linear-gradient(135deg, #43e97b, #38f9d7);">
-                    <i class="fas fa-clock"></i>
-                </div>
-                <div>
-                    <h4 class="mb-0 fw-bold text-warning">{{ pending_results|default:"0" }}</h4>
-                    <small class="text-muted">Pending Approvals</small>
-                </div>
+        <div class="stat-card" style="--stat-color: linear-gradient(135deg, #fa709a, #fee140);">
+            <div class="icon-wrapper">
+                <i class="fas fa-clock"></i>
             </div>
+            <div class="stat-value">{{ pending_results|default:"0" }}</div>
+            <div class="stat-label">Pending Approvals</div>
+            {% if pending_results > 0 %}
+            <span class="stat-trend" style="background: #fef3c7; color: #92400e;">
+                <i class="fas fa-exclamation-circle"></i> Needs attention
+            </span>
+            {% endif %}
         </div>
     </div>
 
-    <!-- Quick Actions -->
-    <h2 class="h4 mb-3 text-dark fw-bold">Quick Actions</h2>
-    <div class="row quick-actions g-4">
-        <div class="col-md-4 col-lg-3">
-            <a href="{% url 'school:student_create' %}" class="text-decoration-none">
-                <div class="action-card">
-                    <i class="fas fa-user-plus"></i>
-                    <h5 class="mb-0">Add Student</h5>
-                </div>
-            </a>
+    <!-- Quick Stats Bar -->
+    <div class="quick-stats">
+        <div class="quick-stat" style="--stat-bg-start: #667eea; --stat-bg-end: #764ba2;">
+            <div class="quick-stat-value">{{ total_departments|default:"0" }}</div>
+            <div class="quick-stat-label">Departments</div>
         </div>
-        <div class="col-md-4 col-lg-3">
-            <a href="{% url 'school:class_create' %}" class="text-decoration-none">
-                <div class="action-card">
-                    <i class="fas fa-plus-circle"></i>
-                    <h5 class="mb-0">Create Class</h5>
-                </div>
-            </a>
+        <div class="quick-stat" style="--stat-bg-start: #f093fb; --stat-bg-end: #f5576c;">
+            <div class="quick-stat-value">{{ total_courses|default:"0" }}</div>
+            <div class="quick-stat-label">Courses</div>
         </div>
-        <div class="col-md-4 col-lg-3">
-            <a href="{% url 'school:course_create' %}" class="text-decoration-none">
-                <div class="action-card">
-                    <i class="fas fa-book-medical"></i>
-                    <h5 class="mb-0">Add Course</h5>
-                </div>
-            </a>
+        <div class="quick-stat" style="--stat-bg-start: #4facfe; --stat-bg-end: #00f2fe;">
+            <div class="quick-stat-value">{{ active_quarters|default:"0" }}</div>
+            <div class="quick-stat-label">Active Quarters</div>
         </div>
-        <div class="col-md-4 col-lg-3">
-            <a href="{% url 'school:approval_list' %}" class="text-decoration-none">
-                <div class="action-card">
-                    <i class="fas fa-check-double text-success"></i>
-                    <h5 class="mb-0">Approve Results</h5>
-                    {% if pending_results > 0 %}
-                    <span class="badge bg-danger position-absolute top-0 end-0 mt-2 me-2">{{ pending_results }}</span>
-                    {% endif %}
-                </div>
-            </a>
+        <div class="quick-stat" style="--stat-bg-start: #43e97b; --stat-bg-end: #38f9d7;">
+            <div class="quick-stat-value">{{ total_results|default:"0" }}</div>
+            <div class="quick-stat-label">Total Results</div>
         </div>
     </div>
 
-    <div class="mt-5 text-center text-muted">
-        <p><strong>AARMS</strong> — Making school management simple and powerful</p>
+    <!-- Student Management -->
+    <h3 class="section-title">
+        <i class="fas fa-users"></i>
+        Student Management
+    </h3>
+    <div class="action-grid">
+        <a href="{% url 'school:student_list' %}" class="action-btn" style="--btn-color: #5d5fef;">
+            <i class="fas fa-list"></i>
+            <h6>View All Students</h6>
+        </a>
+        <a href="{% url 'school:student_create' %}" class="action-btn" style="--btn-color: #10b981;">
+            <i class="fas fa-user-plus"></i>
+            <h6>Add New Student</h6>
+        </a>
+        <a href="#" class="action-btn" style="--btn-color: #f59e0b;">
+            <i class="fas fa-file-import"></i>
+            <h6>Import Students (CSV)</h6>
+        </a>
+        <a href="#" class="action-btn" style="--btn-color: #ef4444;">
+            <i class="fas fa-user-times"></i>
+            <h6>Inactive Students</h6>
+        </a>
     </div>
+
+    <!-- Academic Structure -->
+    <h3 class="section-title">
+        <i class="fas fa-building"></i>
+        Academic Structure
+    </h3>
+    <div class="action-grid">
+        <a href="{% url 'school:department_list' %}" class="action-btn" style="--btn-color: #8b5cf6;">
+            <i class="fas fa-building"></i>
+            <h6>Departments</h6>
+        </a>
+        <a href="{% url 'school:class_list' %}" class="action-btn" style="--btn-color: #3b82f6;">
+            <i class="fas fa-chalkboard"></i>
+            <h6>Classes</h6>
+        </a>
+        <a href="{% url 'school:course_list' %}" class="action-btn" style="--btn-color: #06b6d4;">
+            <i class="fas fa-book"></i>
+            <h6>Courses</h6>
+        </a>
+        <a href="#" class="action-btn" style="--btn-color: #10b981;">
+            <i class="fas fa-calendar-alt"></i>
+            <h6>Academic Years</h6>
+        </a>
+    </div>
+
+    <!-- Staff & Assignments -->
+    <h3 class="section-title">
+        <i class="fas fa-user-tie"></i>
+        Staff & Assignments
+    </h3>
+    <div class="action-grid">
+        <a href="#" class="action-btn" style="--btn-color: #f59e0b;">
+            <i class="fas fa-users-cog"></i>
+            <h6>Manage Teachers</h6>
+        </a>
+        <a href="#" class="action-btn" style="--btn-color: #ef4444;">
+            <i class="fas fa-user-plus"></i>
+            <h6>Add Teacher Account</h6>
+        </a>
+        <a href="#" class="action-btn" style="--btn-color: #8b5cf6;">
+            <i class="fas fa-clipboard-list"></i>
+            <h6>Teacher Assignments</h6>
+        </a>
+        <a href="#" class="action-btn" style="--btn-color: #06b6d4;">
+            <i class="fas fa-user-graduate"></i>
+            <h6>Class Teachers</h6>
+        </a>
+    </div>
+
+    <!-- Results Management -->
+    <h3 class="section-title">
+        <i class="fas fa-chart-line"></i>
+        Results Management
+    </h3>
+    <div class="action-grid">
+        <a href="{% url 'school:approval_list' %}" class="action-btn" style="--btn-color: #10b981;">
+            {% if pending_results > 0 %}
+            <span class="badge">{{ pending_results }}</span>
+            {% endif %}
+            <i class="fas fa-check-double"></i>
+            <h6>Approve Results</h6>
+        </a>
+        <a href="#" class="action-btn" style="--btn-color: #3b82f6;">
+            <i class="fas fa-calendar-check"></i>
+            <h6>Manage Quarters</h6>
+        </a>
+        <a href="#" class="action-btn" style="--btn-color: #8b5cf6;">
+            <i class="fas fa-calculator"></i>
+            <h6>Calculate Semesters</h6>
+        </a>
+        <a href="#" class="action-btn" style="--btn-color: #f59e0b;">
+            <i class="fas fa-lock"></i>
+            <h6>Lock/Unlock Results</h6>
+        </a>
+    </div>
+
+    <!-- Reports & Printing -->
+    <h3 class="section-title">
+        <i class="fas fa-print"></i>
+        Reports & Printing
+    </h3>
+    <div class="report-grid">
+        <a href="#" class="report-card" style="--report-color: #5d5fef;">
+            <div class="report-icon">
+                <i class="fas fa-file-pdf"></i>
+            </div>
+            <h6>Print Quarterly Reports</h6>
+            <p>Generate and print quarterly result sheets</p>
+        </a>
+        <a href="#" class="report-card" style="--report-color: #10b981;">
+            <div class="report-icon">
+                <i class="fas fa-file-alt"></i>
+            </div>
+            <h6>Print Semester Reports</h6>
+            <p>Generate semester report cards</p>
+        </a>
+        <a href="#" class="report-card" style="--report-color: #f59e0b;">
+            <div class="report-icon">
+                <i class="fas fa-chart-bar"></i>
+            </div>
+            <h6>Class Performance</h6>
+            <p>View class-wise performance analytics</p>
+        </a>
+        <a href="#" class="report-card" style="--report-color: #ef4444;">
+            <div class="report-icon">
+                <i class="fas fa-trophy"></i>
+            </div>
+            <h6>Top Performers</h6>
+            <p>View top performing students</p>
+        </a>
+        <a href="#" class="report-card" style="--report-color: #8b5cf6;">
+            <div class="report-icon">
+                <i class="fas fa-file-code"></i>
+            </div>
+            <h6>Manage Templates</h6>
+            <p>Customize report templates</p>
+        </a>
+        <a href="#" class="report-card" style="--report-color: #06b6d4;">
+            <div class="report-icon">
+                <i class="fas fa-download"></i>
+            </div>
+            <h6>Export Data</h6>
+            <p>Export results to Excel/CSV</p>
+        </a>
+    </div>
+
+    <!-- Recent Activity -->
+    <h3 class="section-title">
+        <i class="fas fa-history"></i>
+        Recent Activity
+    </h3>
+    <div class="activity-card">
+        {% if recent_activities %}
+        {% for activity in recent_activities %}
+        <div class="activity-item">
+            <div class="activity-icon" style="--activity-color: {{ activity.color }};">
+                <i class="fas {{ activity.icon }}"></i>
+            </div>
+            <div class="activity-content">
+                <h6>{{ activity.title }}</h6>
+                <p>{{ activity.description }}</p>
+                <div class="activity-time">
+                    <i class="far fa-clock"></i> {{ activity.timestamp|timesince }} ago
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="activity-item">
+            <div class="activity-icon" style="--activity-color: #64748b;">
+                <i class="fas fa-info-circle"></i>
+            </div>
+            <div class="activity-content">
+                <h6>No recent activity</h6>
+                <p>Start managing your school data to see activity here</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- System Settings -->
+    <h3 class="section-title">
+        <i class="fas fa-cog"></i>
+        System Settings
+    </h3>
+    <div class="action-grid">
+        <a href="#" class="action-btn" style="--btn-color: #64748b;">
+            <i class="fas fa-database"></i>
+            <h6>Backup Database</h6>
+        </a>
+        <a href="#" class="action-btn" style="--btn-color: #8b5cf6;">
+            <i class="fas fa-bell"></i>
+            <h6>Notifications</h6>
+        </a>
+        <a href="#" class="action-btn" style="--btn-color: #06b6d4;">
+            <i class="fas fa-user-shield"></i>
+            <h6>User Permissions</h6>
+        </a>
+        <a href="#" class="action-btn" style="--btn-color: #f59e0b;">
+            <i class="fas fa-history"></i>
+            <h6>Activity Logs</h6>
+        </a>
+    </div>
+
 </div>
 {% endblock %}
